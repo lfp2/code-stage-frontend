@@ -3,11 +3,12 @@ import styled from 'styled-components'
 import 'fontsource-inter'
 
 export const Container = styled.div`
-  width: 290px;
-  height: 253px;
+  width: 280px;
+  height: 240px;
   padding: 5px;
   display: flex;
   background-image: linear-gradient(#e6b1ff, #b1faff);
+  margin: 10px;
 `
 export const Image = styled.div`
   background-position: center;
