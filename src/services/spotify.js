@@ -1,11 +1,22 @@
-const authEndpoint = 'https://accounts.spotify.com/authorize?'
+import axios from 'axios'
+
+const authEndpoint = 'https://accounts.spotify.com/authorize'
 const clientId = process.env.REACT_APP_CLIENT_ID
+const clientSecret = process.env.REACT_APP_CLIENT_SECRET
 const redirectUri = 'http://localhost:3000/playlists'
-const scopes = [
-  'user-read-currently-playing',
-  'user-read-playback-state',
-  'user-top-read',
-]
-export const AUTHENTICATION_LINK = `${authEndpoint}client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
-  '%20'
-)}&response_type=code&show_dialog=true`
+const scopes = 'user-read-private user-read-email user-top-read'
+export const AUTHENTICATION_LINK =
+  authEndpoint +
+  '?response_type=code' +
+  '&client_id=' +
+  clientId +
+  (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+  '&redirect_uri=' +
+  encodeURIComponent(redirectUri)
+
+export const getAccessToken = async (code) => {
+  const response = await axios.get(
+    `http://localhost:8080/callback?code=${code}`
+  )
+  return response
+}

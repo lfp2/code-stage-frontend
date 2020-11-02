@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './App.css'
 import Header from '../components/Header'
 import Menu from '../components/Menu'
@@ -8,16 +8,32 @@ import Motivacao from '../assets/images/Motivacao.png'
 import Diversao from '../assets/images/Diversao.png'
 import Sextou from '../assets/images/Sextou.png'
 import PositividadeIcon from '../assets/images/PositividadeIcon.png'
-import { AUTHENTICATION_LINK } from '../services/spotify'
+import { getAccessToken } from '../services/spotify'
 import { useLocation } from 'react-router-dom'
+import { useCookies } from 'react-cookie'
 
 function App() {
+  const [cookies, setCookie] = useCookies(['access_token', 'refresh_token'])
   function useQuery() {
     return new URLSearchParams(useLocation().search)
   }
 
   let query = useQuery()
-  const [token, setToken] = useState(query.get('token'))
+  const code = query.get('code')
+
+  useEffect(async () => {
+    if (!cookies.access_token) {
+      const response = await getAccessToken(code)
+      setCookie('access_token', response.data.access_token, {
+        path: '/',
+        secure: true,
+      })
+      setCookie('refresh_token', response.data.refresh_token, {
+        path: '/',
+        secure: true,
+      })
+    }
+  }, [])
 
   return (
     <div className="App">
