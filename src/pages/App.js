@@ -23,15 +23,23 @@ function App() {
 
   useEffect(async () => {
     if (!cookies.access_token) {
-      const response = await getAccessToken(code)
-      setCookie('access_token', response.data.access_token, {
-        path: '/',
-        secure: true,
-      })
-      setCookie('refresh_token', response.data.refresh_token, {
-        path: '/',
-        secure: true,
-      })
+      try {
+        const response = await getAccessToken(code)
+        setCookie('access_token', response.data.access_token, {
+          path: '/',
+          secure: true,
+        })
+        setCookie('refresh_token', response.data.refresh_token, {
+          path: '/',
+          secure: true,
+        })
+        setCookie('user_id', response.data.user_id, {
+          path: '/',
+          secure: true,
+        })
+      } catch (error) {
+        console.log(error)
+      }
     }
   }, [])
 
